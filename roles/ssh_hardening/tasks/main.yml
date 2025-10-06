@@ -1,0 +1,21 @@
+---
+- name: Disable root login
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin'
+    line: 'PermitRootLogin no'
+    state: present
+    backup: yes
+
+- name: Disable password authentication
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+    state: present
+    backup: yes
+
+- name: Restart ssh service
+  ansible.builtin.service:
+    name: ssh
+    state: restarted

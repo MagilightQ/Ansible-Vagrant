@@ -1,0 +1,13 @@
+---
+- name: Ensure group webapp exists
+  ansible.builtin.group:
+    name: webapp
+    state: present
+
+- name: Ensure user webapp exists
+  ansible.builtin.user:
+    name: webapp
+    group: webapp
+    create_home: yes
+    state: present
+    password: "{{ webapp_password | password_hash('sha512') }}"

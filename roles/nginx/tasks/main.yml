@@ -1,0 +1,33 @@
+---
+- name: Ensure nginx is installed
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Ensure /opt/static-sites directory exists
+  ansible.builtin.file:
+    path: /opt/static-sites
+    state: directory
+    owner: webapp
+    group: webapp
+    mode: '0755'
+
+- name: Deploy nginx site config
+  ansible.builtin.template:
+    src: nginx.site.j2
+    dest: /etc/nginx/sites-available/cv_website.conf
+    mode: '0644'
+  notify:
+    - Restart nginx
+- name: Enable nginx site
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/cv_website.conf
+    dest: /etc/nginx/sites-enabled/cv_website.conf
+    state: link
+    force: yes
+
+- name: Remove default nginx site
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent

@@ -1,0 +1,29 @@
+---
+- name: Configure webserver
+  hosts: webservers
+  become: yes
+
+  roles:
+    - time
+    - users
+    - ssh_hardening
+    # - packages
+    - nginx
+    - firewall
+    - security
+    - deploy
+
+- name: Validate webserver
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Validate Nginx is serving
+      ansible.builtin.uri:
+        url: http://192.168.56.10
+        return_content: yes
+      register: webpage
+
+    - name: Debug HTTP response
+      ansible.builtin.debug:
+        msg: "Web content: {{ webpage.content }}"

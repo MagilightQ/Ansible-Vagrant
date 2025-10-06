@@ -1,0 +1,9 @@
+---
+- name: Debug vault variables
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Print webapp_password
+      ansible.builtin.debug:
+        msg: "Password = {{ webapp_password | default('nenalezeno') }}"

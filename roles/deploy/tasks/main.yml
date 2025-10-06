@@ -1,0 +1,14 @@
+---
+- name: Ensure Git is installed
+  ansible.builtin.apt:
+    name: git
+    state: present
+    update_cache: yes
+
+- name: Clone CV website repository
+  ansible.builtin.git:
+    repo: "https://github.com/MagilightQ/cv_website.git"
+    dest: /var/www/cv_website
+    version: master
+    force: yes
+

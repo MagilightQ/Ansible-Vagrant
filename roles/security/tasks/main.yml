@@ -1,0 +1,32 @@
+---
+- name: Ensure unattended-upgrades is installed
+  ansible.builtin.apt:
+    name:
+      - unattended-upgrades
+      - apt-listchanges
+    state: present
+    update_cache: yes
+
+- name: Ensure auto-upgrades config exists
+  ansible.builtin.copy:
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    content: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
+
+- name: Ensure unattended-upgrades service is enabled and running
+  ansible.builtin.service:
+    name: unattended-upgrades
+    enabled: yes
+    state: started
+
+- name: Ensure fail2ban is installed
+  ansible.builtin.apt:
+    name: fail2ban
+    state: present
+
+- name: Ensure fail2ban is running and enabled
+  ansible.builtin.service:
+    name: fail2ban
+    state: started
+    enabled: yes
